@@ -63,7 +63,7 @@ CREATE TABLE "patients" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "profilePhoto" TEXT,
-    "address" TEXT NOT NULL,
+    "address" TEXT,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
