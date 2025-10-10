@@ -14,8 +14,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const uploadToCloudinary = async (file: Express.Multer.File) => {};
+const uploadToCloudinary = async (file: Express.Multer.File) => {
+  console.log("file:", file);
+};
 
 export const fileUploader = {
   upload,
+  uploadToCloudinary,
 };
