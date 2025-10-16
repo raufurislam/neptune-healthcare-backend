@@ -3,7 +3,9 @@ import config from "../../../config";
 import { prisma } from "../../shared/prisma";
 import bcrypt from "bcryptjs";
 import { fileUploader } from "../../helper/fileUploader";
-import { Admin, Doctor, UserRole } from "@prisma/client";
+import { Admin, Doctor, Prisma, UserRole } from "@prisma/client";
+import { IOptions, paginationHelper } from "../../helper/paginationHelper";
+import { userSearchableFields } from "./user.constant";
 
 const createPatient = async (req: Request) => {
   if (req.file) {
@@ -33,34 +35,47 @@ const createPatient = async (req: Request) => {
   return result;
 };
 
-const getAllFromDb = async (params: any, options: any) => {
-  const pageNumber = options.page || 1;
-  const limitNumber = options.limit || 10;
+const getAllFromDb = async (params: any, options: IOptions) => {
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelper.calculatePagination(options);
 
-  const skip = (pageNumber - 1) * limitNumber;
+  const { searchTerm, ...filterData } = params;
+  const andConditions: Prisma.UserWhereInput[] = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: userSearchableFields.map((field) => ({
+        [field]: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filterData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filterData).map((key) => ({
+        [key]: {
+          equals: (filterData as any)[key],
+        },
+      })),
+    });
+  }
 
   const result = await prisma.user.findMany({
     skip,
-    take: limitNumber,
+    take: limit,
 
     where: {
-      email: {
-        contains: searchTerm,
-        mode: "insensitive",
-      },
-      role: role,
-      status: status,
+      AND: andConditions,
     },
 
-    orderBy:
-      sortBy && sortOrder
-        ? {
-            [sortBy]: sortOrder,
-          }
-        : {
-            createdAt: "asc",
-          },
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
   });
+
   return result;
 };
 
