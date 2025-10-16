@@ -35,11 +35,11 @@ const createPatient = async (req: Request) => {
   return result;
 };
 
-const getAllFromDb = async (params: any, options: IOptions) => {
+const getAllFromDB = async (params: any, options: IOptions) => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelper.calculatePagination(options);
-
   const { searchTerm, ...filterData } = params;
+
   const andConditions: Prisma.UserWhereInput[] = [];
 
   if (searchTerm) {
@@ -63,20 +63,34 @@ const getAllFromDb = async (params: any, options: IOptions) => {
     });
   }
 
+  const whereConditions: Prisma.UserWhereInput =
+    andConditions.length > 0
+      ? {
+          AND: andConditions,
+        }
+      : {};
+
   const result = await prisma.user.findMany({
     skip,
     take: limit,
 
-    where: {
-      AND: andConditions,
-    },
-
+    where: whereConditions,
     orderBy: {
       [sortBy]: sortOrder,
     },
   });
 
-  return result;
+  const total = await prisma.user.count({
+    where: whereConditions,
+  });
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
 };
 
 const createAdmin = async (req: Request): Promise<Admin> => {
@@ -144,5 +158,5 @@ export const UserService = {
   createPatient,
   createAdmin,
   createDoctor,
-  getAllFromDb,
+  getAllFromDB,
 };
