@@ -3,7 +3,11 @@ import { jwtHelper } from "../helper/jwtHelper";
 import config from "../../config";
 
 const auth = (...roles: string[]) => {
-  async (req: Request & { user?: any }, res: Response, next: NextFunction) => {
+  return async (
+    req: Request & { user?: any },
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const token = req.cookies.get("accessToken");
 

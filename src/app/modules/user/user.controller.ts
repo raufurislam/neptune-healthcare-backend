@@ -48,7 +48,7 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 201,
     success: true,
-    message: "Doctor Created successfuly!",
+    message: "Doctor Created successfully!",
     data: result,
   });
 });
