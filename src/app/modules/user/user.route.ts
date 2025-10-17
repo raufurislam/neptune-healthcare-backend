@@ -2,10 +2,16 @@ import { NextFunction, Request, Response, Router } from "express";
 import { UserController } from "./user.controller";
 import { fileUploader } from "../../helper/fileUploader";
 import { UserValidation } from "./user.validation";
+import { UserRole } from "@prisma/client";
+import auth from "../../middlewares/auth";
 
 const router = Router();
 
-router.get("/", UserController.getAllFromDb);
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.DOCTOR),
+  UserController.getAllFromDb
+);
 
 router.post(
   "/create-patient",
@@ -20,23 +26,26 @@ router.post(
 
 router.post(
   "/create-admin",
+  auth(UserRole.ADMIN),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = UserValidation.createPatientValidationSchema.parse(
+    req.body = UserValidation.createAdminValidationSchema.parse(
       JSON.parse(req.body.data)
     );
-    return UserController.createPatient(req, res, next);
+    return UserController.createAdmin(req, res, next);
   }
 );
 
 router.post(
   "/create-doctor",
+  auth(UserRole.ADMIN),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = UserValidation.createPatientValidationSchema.parse(
+    console.log(JSON.parse(req.body.data));
+    req.body = UserValidation.createDoctorValidationSchema.parse(
       JSON.parse(req.body.data)
     );
-    return UserController.createPatient(req, res, next);
+    return UserController.createDoctor(req, res, next);
   }
 );
 
