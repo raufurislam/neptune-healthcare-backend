@@ -45,7 +45,7 @@ const createAdmin = async (req: Request): Promise<Admin> => {
 
   const hashedPassword: string = await bcrypt.hash(
     req.body.password,
-    config.BCRYPT_SALT_ROUND
+    Number(config.BCRYPT_SALT_ROUND)
   );
 
   const userData = {
@@ -78,7 +78,7 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
   }
   const hashedPassword: string = await bcrypt.hash(
     req.body.password,
-    config.BCRYPT_SALT_ROUND
+    Number(config.BCRYPT_SALT_ROUND)
   );
 
   const userData = {
