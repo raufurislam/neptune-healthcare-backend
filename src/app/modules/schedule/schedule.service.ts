@@ -6,6 +6,7 @@ const insertIntoDB = async (payload: any) => {
   const { startTime, endTime, startDate, endDate } = payload;
 
   const intervalTime = 30;
+  const schedules = [];
 
   const currentDate = new Date(startDate);
   const lastDate = new Date(endDate);
@@ -40,7 +41,16 @@ const insertIntoDB = async (payload: any) => {
         endDateTime: slotEndDateTime,
       };
 
-      const existingSchedule = await prisma.Sche
+      const existingSchedule = await prisma.schedule.findFirst({
+        where: scheduleData,
+      });
+
+      if (!existingSchedule) {
+        const result = await prisma.schedule.create({
+          data: scheduleData,
+        });
+        schedules.push(result);
+      }
     }
   }
 
