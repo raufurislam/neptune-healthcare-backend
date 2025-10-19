@@ -1,8 +1,7 @@
-import { addHours, addMinutes, format } from "date-fns";
+import { addMinutes, addHours, format } from "date-fns";
 import { prisma } from "../../shared/prisma";
 
 const insertIntoDB = async (payload: any) => {
-  // console.log({ payload });
   const { startTime, endTime, startDate, endDate } = payload;
 
   const intervalTime = 30;
@@ -33,8 +32,8 @@ const insertIntoDB = async (payload: any) => {
     );
 
     while (startDateTime < endDateTime) {
-      const slotStartDateTime = startDateTime; // 10:00
-      const slotEndDateTime = addMinutes(startDateTime, intervalTime); // 10:30
+      const slotStartDateTime = startDateTime; // 10:30
+      const slotEndDateTime = addMinutes(startDateTime, intervalTime); // 11:00
 
       const scheduleData = {
         startDateTime: slotStartDateTime,
@@ -51,10 +50,18 @@ const insertIntoDB = async (payload: any) => {
         });
         schedules.push(result);
       }
+
+      slotStartDateTime.setMinutes(
+        slotStartDateTime.getMinutes() + intervalTime
+      );
     }
+
+    currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  return payload;
+  return schedules;
 };
 
-export const ScheduleService = { insertIntoDB };
+export const ScheduleService = {
+  insertIntoDB,
+};
