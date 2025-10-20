@@ -29,6 +29,18 @@ const globalErrorHandler = (
         (error = err.meta),
         (statusCode = httpStatus.BAD_REQUEST);
     }
+  } else if (error instanceof Prisma.PrismaClientValidationError) {
+    message = "Validation error";
+    error = error.message;
+    statusCode = httpStatus.BAD_REQUEST;
+  } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+    message = "Unknown error occurred!";
+    error = error.message;
+    statusCode = httpStatus.INTERNAL_SERVER_ERROR;
+  } else if (error instanceof Prisma.PrismaClientInitializationError) {
+    message = "Prisma Client failed to initialize!";
+    error = error.message;
+    statusCode = httpStatus.INTERNAL_SERVER_ERROR;
   }
 
   res.status(statusCode).json({
