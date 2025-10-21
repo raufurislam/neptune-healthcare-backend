@@ -23,7 +23,7 @@ const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
 const updateIntoDb = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = await DoctorService.updateIntoDb(id, req.body);
+  const result = await DoctorService.updateIntoDB(id, req.body);
 
   sendResponse(res, {
     statusCode: 200,
