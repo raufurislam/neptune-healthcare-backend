@@ -41,4 +41,5 @@ export default {
   JWT_ACCESS_SECRET: getEnvVar("JWT_ACCESS_SECRET"),
   JWT_REFRESH_SECRET: getEnvVar("JWT_REFRESH_SECRET"),
   JWT_REFRESH_EXPIRES: getEnvVar("JWT_REFRESH_EXPIRES"),
+  openRouterApiKey: getEnvVar("OPENROUTER_API_KEY"),
 };
