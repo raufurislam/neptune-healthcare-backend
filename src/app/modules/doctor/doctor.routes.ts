@@ -5,4 +5,4 @@ const router = express.Router();
 
 router.get("/", DoctorController.getAllFromDb);
 
-export const doctorScheduleRoutes = router;
+export const doctorRoutes = router;

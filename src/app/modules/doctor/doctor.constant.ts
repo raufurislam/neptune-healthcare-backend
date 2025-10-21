@@ -1,5 +1,4 @@
 // doctor/doctor.constant.ts
-
 export const doctorFilterableFields = [
   "email",
   "contactNumber",
@@ -9,11 +8,4 @@ export const doctorFilterableFields = [
   "searchTerm",
 ];
 
-export const doctorSearchableFields = [
-  "name",
-  "email",
-  "contactNumber",
-  "gender",
-  "appointmentFee",
-  "specialties",
-];
+export const doctorSearchableFields = ["name", "email", "contactNumber"];

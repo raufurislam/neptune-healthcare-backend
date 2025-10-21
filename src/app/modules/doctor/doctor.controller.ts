@@ -15,7 +15,8 @@ const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
     statusCode: 200,
     success: true,
     message: "Doctor fetched Successfully",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 export const DoctorController = { getAllFromDb };
