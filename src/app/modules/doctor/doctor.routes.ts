@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.get("/", DoctorController.getAllFromDb);
 
+router.patch("/:id", DoctorController.updateIntoDb);
+
 export const doctorRoutes = router;
