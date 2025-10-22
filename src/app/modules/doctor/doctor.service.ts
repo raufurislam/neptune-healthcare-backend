@@ -6,6 +6,7 @@ import { IDoctorUpdateInput } from "./doctor.interface";
 import ApiError from "../../errors/apiError";
 import httpStatus from "http-status";
 import { openai } from "../../helper/open-router";
+import { extractJsonFromMessage } from "../../helper/extractJsonFromMessage";
 
 const getAllFromDb = async (filters: any, options: IOptions) => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -145,37 +146,6 @@ const updateIntoDB = async (
   });
 };
 
-const extractJsonFromMessage = (message: any) => {
-  try {
-    const content = message?.content || "";
-
-    // 1️⃣ Try to extract JSON code block (```json ... ```)
-    const jsonBlockMatch = content.match(/```json([\s\S]*?)```/);
-    if (jsonBlockMatch) {
-      const jsonText = jsonBlockMatch[1].trim();
-      return JSON.parse(jsonText);
-    }
-
-    // 2️⃣ If no code block, check if the entire content is JSON
-    if (content.trim().startsWith("{") || content.trim().startsWith("[")) {
-      return JSON.parse(content);
-    }
-
-    // 3️⃣ As a fallback, try to find the first JSON-like substring
-    const jsonLikeMatch = content.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
-    if (jsonLikeMatch) {
-      const jsonText = jsonLikeMatch[1].trim();
-      return JSON.parse(jsonText);
-    }
-
-    throw new Error("No valid JSON found in AI response.");
-  } catch (error: any) {
-    console.error("❌ Failed to parse AI response as JSON:", error.message);
-    console.error("🧾 Raw content:", message?.content);
-    throw new Error("Failed to extract JSON from AI response.");
-  }
-};
-
 const getAISuggestions = async (payload: { symptoms: string }) => {
   if (!(payload && payload.symptoms)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "symptom is required");
@@ -225,14 +195,12 @@ Return your response strictly in JSON format with full individual doctor data.
     ],
   });
 
-  const parsedResult = await extractJsonFromMessage(
-    completion.choices[0].message
-  );
+  const result = await extractJsonFromMessage(completion.choices[0].message);
 
   // console.log("✅ AI Doctor Suggestions:", parsedResult);
   console.log(completion.choices[0].message.content);
 
-  return parsedResult;
+  return result;
 };
 
 export const DoctorService = { getAllFromDb, updateIntoDB, getAISuggestions };
