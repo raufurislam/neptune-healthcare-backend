@@ -58,6 +58,16 @@ const createAppointment = async (
       },
     });
 
+    const transactionId = uuidv4();
+
+    await tnx.payment.create({
+      data: {
+        appointmentId: appointmentData.id,
+        amount: doctorData.appointmentFee,
+        transactionId,
+      },
+    });
+
     return appointmentData;
   });
 
