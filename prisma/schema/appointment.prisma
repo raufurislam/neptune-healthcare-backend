@@ -1,39 +1,48 @@
 model Appointment {
-    id             String   @id @default(uuid())
+    id             String            @id @default(uuid())
     patientId      String
+    patient        Patient           @relation(fields: [patientId], references: [id])
     doctorId       String
+    doctor         Doctor            @relation(fields: [doctorId], references: [id])
     scheduleId     String
+    schedule       Schedule          @relation(fields: [scheduleId], references: [id])
     videoCallingId String
-    status         String
-    paymentStatus  String
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
+    status         AppointmentStatus
+    paymentStatus  paymentStatus
+    createdAt      DateTime          @default(now())
+    updatedAt      DateTime          @updatedAt
+    payment        Payment?
+    prescription   Prescription?
 
     @@map("appointments")
 }
 
 model Payment {
-    id                 String   @id @default(uuid())
-    appointmentId      String
+    id                 String        @id @default(uuid())
+    appointmentId      String        @unique
+    appointment        Appointment   @relation(fields: [appointmentId], references: [id])
     amount             Float
     transactionId      String
-    status             String
+    status             paymentStatus
     paymentGatewayData Json?
-    createdAt          DateTime @default(now())
-    updatedAt          DateTime @updatedAt
+    createdAt          DateTime      @default(now())
+    updatedAt          DateTime      @updatedAt
 
     @@map("payments")
 }
 
 model Prescription {
-    id            String    @id @default(uuid())
-    appointmentId String
+    id            String      @id @default(uuid())
+    appointmentId String      @unique
+    appointment   Appointment @relation(fields: [appointmentId], references: [id])
     doctorId      String
+    doctor        Doctor      @relation(fields: [doctorId], references: [id])
     patientId     String
+    patient       Patient     @relation(fields: [patientId], references: [id])
     instructions  String
     followUpdate  DateTime?
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @updatedAt
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
 
     @@map("prescriptions")
 }
