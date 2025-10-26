@@ -29,6 +29,14 @@ const globalErrorHandler = (
         (error = err.meta),
         (statusCode = httpStatus.BAD_REQUEST);
     }
+    if (err.code === "P2025") {
+      (message = err.meta?.cause || "Record not found"),
+        (error = {
+          model: err.meta?.modelName || "Unknown model",
+          cause: err.meta?.cause || "No record found for the query",
+        }),
+        (statusCode = httpStatus.NOT_FOUND);
+    }
   }
   // ✅ Prisma Validation Error (your case)
   else if (err instanceof Prisma.PrismaClientValidationError) {
