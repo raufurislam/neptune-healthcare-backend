@@ -9,6 +9,7 @@ model Schedule {
     @@map("schedules")
 }
 
+
 model DoctorSchedules {
     doctorId   String
     doctor     Doctor   @relation(fields: [doctorId], references: [id])
