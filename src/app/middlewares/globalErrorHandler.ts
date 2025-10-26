@@ -29,18 +29,39 @@ const globalErrorHandler = (
         (error = err.meta),
         (statusCode = httpStatus.BAD_REQUEST);
     }
-  } else if (error instanceof Prisma.PrismaClientValidationError) {
+  }
+  // ✅ Prisma Validation Error (your case)
+  else if (err instanceof Prisma.PrismaClientValidationError) {
     message = "Validation error";
-    error = error.message;
     statusCode = httpStatus.BAD_REQUEST;
-  } else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
+
+    // Clean up the long Prisma message
+    const match = err.message.match(/Argument `(\w+)` is missing/);
+    if (match) {
+      // extract field name cleanly
+      error = `Missing required field: ${match[1]}`;
+    } else {
+      // fallback: keep single-line trimmed message
+      error = err.message.replace(/\s+/g, " ").trim();
+    }
+  }
+  // ✅ Prisma Unknown Error
+  else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
     message = "Unknown error occurred!";
     error = error.message;
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
-  } else if (error instanceof Prisma.PrismaClientInitializationError) {
+  }
+  // ✅ Prisma Initialization Error
+  else if (error instanceof Prisma.PrismaClientInitializationError) {
     message = "Prisma Client failed to initialize!";
     error = error.message;
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
+  }
+
+  // ✅ Fallback for all other unexpected errors
+  else if (err instanceof Error) {
+    message = err.message;
+    error = process.env.NODE_ENV === "development" ? err.stack : undefined;
   }
 
   res.status(statusCode).json({
