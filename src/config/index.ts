@@ -43,4 +43,5 @@ export default {
   JWT_REFRESH_EXPIRES: getEnvVar("JWT_REFRESH_EXPIRES"),
   openRouterApiKey: getEnvVar("OPENROUTER_API_KEY"),
   stripeSecretKey: getEnvVar("STRIPE_SECRET_KEY"),
+  webhookSecret: getEnvVar("WEBHOOKSECRET"),
 };
