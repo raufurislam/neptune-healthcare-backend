@@ -38,21 +38,39 @@ const globalErrorHandler = (
         (statusCode = httpStatus.NOT_FOUND);
     }
   }
-  // ✅ Prisma Validation Error (your case)
+  // // ✅ Prisma Validation Error (your case)
+  // else if (err instanceof Prisma.PrismaClientValidationError) {
+  //   message = "Validation error";
+  //   statusCode = httpStatus.BAD_REQUEST;
+
+  //   // Clean up the long Prisma message
+  //   const match = err.message.match(/Argument `(\w+)` is missing/);
+  //   if (match) {
+  //     // extract field name cleanly
+  //     error = `Missing required field: ${match[1]}`;
+  //   } else {
+  //     // fallback: keep single-line trimmed message
+  //     error = err.message.replace(/\s+/g, " ").trim();
+  //   }
+  // }
+
+  // ✅ Prisma Validation Error (invalid data, enum mismatch, etc.)
   else if (err instanceof Prisma.PrismaClientValidationError) {
     message = "Validation error";
     statusCode = httpStatus.BAD_REQUEST;
 
-    // Clean up the long Prisma message
-    const match = err.message.match(/Argument `(\w+)` is missing/);
-    if (match) {
-      // extract field name cleanly
-      error = `Missing required field: ${match[1]}`;
+    // In development → show exact Prisma message (helpful!)
+    if (process.env.NODE_ENV === "development") {
+      error = err.message
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace("Invalid `prisma.", "Invalid Prisma Query: prisma.");
     } else {
-      // fallback: keep single-line trimmed message
-      error = err.message.replace(/\s+/g, " ").trim();
+      // In production → clean message
+      error = "Your request data did not match the required database schema.";
     }
   }
+
   // ✅ Prisma Unknown Error
   else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
     message = "Unknown error occurred!";

@@ -191,6 +191,15 @@ const updateAppointmentStatus = async (
       throw new ApiError(httpStatus.BAD_REQUEST, "This is not you appointment");
     }
   }
+
+  return await prisma.appointment.update({
+    where: {
+      id: appointmentId,
+    },
+    data: {
+      status,
+    },
+  });
 };
 
 export const AppointmentService = {
