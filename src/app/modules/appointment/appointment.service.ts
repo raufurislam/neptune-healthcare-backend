@@ -30,13 +30,6 @@ const createAppointment = async (
 
   const videoCallingId = uuidv4();
 
-  //   console.log({
-  //     patientId: patientData.id,
-  //     doctorData: doctorData.id,
-  //     scheduleId: payload.scheduleId,
-  //     videoCallingId,
-  //   });
-
   const result = await prisma.$transaction(async (tnx) => {
     const appointmentData = await tnx.appointment.create({
       data: {
@@ -61,7 +54,7 @@ const createAppointment = async (
 
     const transactionId = uuidv4();
 
-    await tnx.payment.create({
+    const paymentData = await tnx.payment.create({
       data: {
         appointmentId: appointmentData.id,
         amount: doctorData.appointmentFee,
@@ -76,23 +69,24 @@ const createAppointment = async (
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: "bdt",
             product_data: {
               name: `Appointment with ${doctorData.name}`,
             },
-            unit_amount: doctorData.appointmentFee * 100, // in cent
+            unit_amount: doctorData.appointmentFee * 100,
           },
           quantity: 1,
         },
       ],
-
+      metadata: {
+        appointmentId: appointmentData.id,
+        paymentId: paymentData.id,
+      },
       success_url: `https://www.programming-hero.com/`,
       cancel_url: `https://next.programming-hero.com/`,
     });
 
-    console.log(session);
-
-    return appointmentData;
+    return { paymentUrl: session.url };
   });
 
   return result;

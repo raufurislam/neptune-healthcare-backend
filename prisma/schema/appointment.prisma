@@ -8,7 +8,7 @@ model Appointment {
     schedule       Schedule          @relation(fields: [scheduleId], references: [id])
     videoCallingId String
     status         AppointmentStatus @default(SCHEDULED)
-    paymentStatus  paymentStatus     @default(UNPAID)
+    paymentStatus  PaymentStatus     @default(UNPAID)
     createdAt      DateTime          @default(now())
     updatedAt      DateTime          @updatedAt
     payment        Payment?
@@ -23,7 +23,7 @@ model Payment {
     appointment        Appointment   @relation(fields: [appointmentId], references: [id])
     amount             Float
     transactionId      String        @unique
-    status             paymentStatus @default(UNPAID)
+    status             PaymentStatus @default(UNPAID)
     paymentGatewayData Json?
     createdAt          DateTime      @default(now())
     updatedAt          DateTime      @updatedAt
@@ -40,7 +40,7 @@ model Prescription {
     patientId     String
     patient       Patient     @relation(fields: [patientId], references: [id])
     instructions  String
-    followUpdate  DateTime?
+    followUpDate  DateTime?
     createdAt     DateTime    @default(now())
     updatedAt     DateTime    @updatedAt
 

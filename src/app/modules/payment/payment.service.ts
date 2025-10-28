@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { prisma } from "../../shared/prisma";
-import { paymentStatus } from "@prisma/client";
+import { PaymentStatus } from "@prisma/client";
 
 const handleStripeWebhookEvent = async (event: Stripe.Event) => {
   switch (event.type) {
@@ -17,8 +17,8 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
         data: {
           paymentStatus:
             session.payment_status === "paid"
-              ? paymentStatus.PAID
-              : paymentStatus.UNPAID,
+              ? PaymentStatus.PAID
+              : PaymentStatus.UNPAID,
         },
       });
 
@@ -29,8 +29,8 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
         data: {
           status:
             session.payment_status === "paid"
-              ? paymentStatus.PAID
-              : paymentStatus.UNPAID,
+              ? PaymentStatus.PAID
+              : PaymentStatus.UNPAID,
           paymentGatewayData: session,
         },
       });

@@ -14,7 +14,6 @@ app.post(
   express.raw({ type: "application/json" }),
   PaymentController.handleStripeWebhookEvent
 );
-
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -31,10 +30,10 @@ app.use("/api/v1", router);
 
 app.get("/", (req: Request, res: Response) => {
   res.send({
-    message: "Astro health care server...",
+    message: "Server is running..",
     environment: config.node_env,
-    uptime: process.uptime().toFixed(2) + " seconds",
-    timeStamp: new Date().toDateString().concat(" ", new Date().toTimeString()),
+    uptime: process.uptime().toFixed(2) + " sec",
+    timeStamp: new Date().toISOString(),
   });
 });
 

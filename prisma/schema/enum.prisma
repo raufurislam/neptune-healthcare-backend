@@ -22,7 +22,7 @@ enum AppointmentStatus {
     CANCEL
 }
 
-enum paymentStatus {
+enum PaymentStatus {
     PAID
     UNPAID
 }
