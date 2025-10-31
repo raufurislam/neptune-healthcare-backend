@@ -63,7 +63,7 @@ const updateIntoDB = catchAsync(
 );
 
 export const PatientController = {
-  //   getAllFromDB,
+  getAllFromDB,
   //   getByIdFromDB,
   //   softDelete,
   updateIntoDB,
