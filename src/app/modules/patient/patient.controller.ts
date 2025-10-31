@@ -34,16 +34,16 @@ const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const softDelete = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await PatientService.softDelete(id);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Patient soft deleted successfully",
-//     data: result,
-//   });
-// });
+const softDelete = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PatientService.softDelete(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Patient soft deleted successfully",
+    data: result,
+  });
+});
 
 const updateIntoDB = catchAsync(
   async (req: Request & { user?: IJWTPayload }, res: Response) => {
@@ -64,6 +64,6 @@ const updateIntoDB = catchAsync(
 export const PatientController = {
   getAllFromDB,
   getByIdFromDB,
-  //   softDelete,
+  softDelete,
   updateIntoDB,
 };
