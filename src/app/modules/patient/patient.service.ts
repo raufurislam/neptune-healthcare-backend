@@ -29,6 +29,13 @@ const updateIntoDB = async (user: IJWTPayload, payload: any) => {
           ...patientHealthData,
           patientId: patientInfo.id,
         },
+
+        // create: {
+        //   ...patientHealthData,
+        //   patient: {
+        //     connect: { id: patientInfo.id },
+        //   },
+        // },
       });
     }
 
@@ -54,6 +61,9 @@ const updateIntoDB = async (user: IJWTPayload, payload: any) => {
   });
 };
 
+const getAllFromDB = async (filters: any, options: any) => {};
+
 export const PatientService = {
   updateIntoDB,
+  getAllFromDB,
 };
