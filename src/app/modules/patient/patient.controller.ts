@@ -17,23 +17,22 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Patient retrieval successfully",
-    // meta: result.meta,
-    // data: result.data,
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 
-// const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await PatientService.getByIdFromDB(id);
+const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PatientService.getByIdFromDB(id);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Patient retrieval successfully",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Patient retrieval successfully",
+    data: result,
+  });
+});
 
 // const softDelete = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -64,7 +63,7 @@ const updateIntoDB = catchAsync(
 
 export const PatientController = {
   getAllFromDB,
-  //   getByIdFromDB,
+  getByIdFromDB,
   //   softDelete,
   updateIntoDB,
 };

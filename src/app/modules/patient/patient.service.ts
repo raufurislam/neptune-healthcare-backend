@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { paginationHelper } from "../../helper/paginationHelper";
+import { Patient, Prisma } from "@prisma/client";
+import { IOptions, paginationHelper } from "../../helper/paginationHelper";
 import { prisma } from "../../shared/prisma";
 import { IJWTPayload } from "../../types/common";
 import { patientSearchableFields } from "./patient.constant";
@@ -64,7 +64,7 @@ const updateIntoDB = async (user: IJWTPayload, payload: any) => {
   });
 };
 
-const getAllFromDB = async (filters: any, options: any) => {
+const getAllFromDB = async (filters: any, options: IOptions) => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelper.calculatePagination(options);
 
@@ -128,7 +128,18 @@ const getAllFromDB = async (filters: any, options: any) => {
   };
 };
 
+const getByIdFromDB = async (id: string): Promise<Patient | null> => {
+  const result = await prisma.patient.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+  return result;
+};
+
 export const PatientService = {
   updateIntoDB,
   getAllFromDB,
+  getByIdFromDB,
 };
