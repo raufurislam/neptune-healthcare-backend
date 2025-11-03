@@ -5,6 +5,7 @@ import sendResponse from "../../shared/sendResponse";
 import pick from "../../helper/pick";
 import { userFilterableFields } from "./user.constant";
 import httpStatus from "http-status";
+import { IJWTPayload } from "../../types/common";
 
 const createPatient = catchAsync(async (req: Request, res: Response) => {
   const result = await UserService.createPatient(req);
@@ -74,4 +75,5 @@ export const UserController = {
   createDoctor,
   createAdmin,
   getAllFromDb,
+  getMyProfile,
 };
