@@ -208,4 +208,5 @@ export const UserService = {
   createAdmin,
   createDoctor,
   getAllFromDB,
+  getMyProfile,
 };
