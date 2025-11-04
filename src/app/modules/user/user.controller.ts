@@ -84,9 +84,9 @@ const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
 
 export const UserController = {
   createPatient,
-  createAdmin,
   createDoctor,
-  getAllFromDB,
+  createAdmin,
+  getAllFromDb,
   getMyProfile,
   changeProfileStatus,
 };
