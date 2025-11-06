@@ -161,48 +161,7 @@ const getAllFromDB = async (params: any, options: IOptions) => {
   };
 };
 
-const getMyProfile = async (user: IJWTPayload) => {
-  const userInfo = await prisma.user.findUniqueOrThrow({
-    where: {
-      email: user.email,
-      status: UserStatus.ACTIVE,
-    },
-    select: {
-      id: true,
-      email: true,
-      needPasswordChange: true,
-      role: true,
-      status: true,
-    },
-  });
 
-  let profileData;
-
-  if (userInfo.role === UserRole.PATIENT) {
-    profileData = await prisma.patient.findUnique({
-      where: {
-        email: userInfo.email,
-      },
-    });
-  } else if (userInfo.role === UserRole.DOCTOR) {
-    profileData = await prisma.doctor.findUnique({
-      where: {
-        email: userInfo.email,
-      },
-    });
-  } else if (userInfo.role === UserRole.ADMIN) {
-    profileData = await prisma.admin.findUnique({
-      where: {
-        email: userInfo.email,
-      },
-    });
-  }
-
-  return {
-    ...userInfo,
-    ...profileData,
-  };
-};
 
 
 
@@ -211,6 +170,6 @@ export const UserService = {
   createAdmin,
   createDoctor,
   getAllFromDB,
-  getMyProfile,
+ 
 
 };
