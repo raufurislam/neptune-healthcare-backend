@@ -114,28 +114,7 @@ const changePassword = async (user: any, payload: any) => {
   };
 };
 
-const getMe = async (session: any) => {
-    const accessToken = session.accessToken;
-    const decodedData = jwtHelper.verifyToken(accessToken, config.jwt.jwt_secret as Secret);
 
-    const userData = await prisma.user.findUniqueOrThrow({
-        where: {
-            email: decodedData.email,
-            status: UserStatus.ACTIVE
-        }
-    })
-
-    const { id, email, role, needPasswordChange, status } = userData;
-
-    return {
-        id,
-        email,
-        role,
-        needPasswordChange,
-        status
-    }
-
-}
 
      
 export const AuthService = {
