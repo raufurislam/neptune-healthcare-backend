@@ -161,15 +161,9 @@ const getAllFromDB = async (params: any, options: IOptions) => {
   };
 };
 
-
-
-
-
 export const UserService = {
   createPatient,
   createAdmin,
   createDoctor,
   getAllFromDB,
- 
-
 };
