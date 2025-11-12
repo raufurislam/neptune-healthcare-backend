@@ -1,3 +1,4 @@
+
 import { NextFunction, Request, Response, Router } from "express";
 import { UserController } from "./user.controller";
 import { fileUploader } from "../../helper/fileUploader";
@@ -47,6 +48,12 @@ router.post(
     );
     return UserController.createDoctor(req, res, next);
   }
+);
+
+router.patch(
+    '/:id/status',
+    auth(UserRole.ADMIN),
+    UserController.changeProfileStatus
 );
 
 export const userRoutes = router;
