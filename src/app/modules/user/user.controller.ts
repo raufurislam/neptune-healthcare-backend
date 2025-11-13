@@ -55,25 +55,35 @@ const createDoctor = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
 const changeProfileStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await UserService.changeProfileStatus(id, req.body);
 
-    const { id } = req.params;
-    const result = await UserService.changeProfileStatus(id, req.body)
-
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: "Users profile status changed!",
-        data: result
-    })
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Users profile status changed!",
+    data: result,
+  });
 });
 
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  const userSession = req.cookies;
+  const result = await AuthService.getMe(userSession);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User retrive successfully!",
+    data: result,
+  });
+});
 
 export const UserController = {
   createPatient,
   createDoctor,
   createAdmin,
   getAllFromDb,
-  changeProfileStatus
+  changeProfileStatus,
+  getMe,
 };
