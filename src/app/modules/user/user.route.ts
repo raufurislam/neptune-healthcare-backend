@@ -1,4 +1,3 @@
-
 import { NextFunction, Request, Response, Router } from "express";
 import { UserController } from "./user.controller";
 import { fileUploader } from "../../helper/fileUploader";
@@ -12,6 +11,12 @@ router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.DOCTOR),
   UserController.getAllFromDb
+);
+
+router.get(
+  "/me",
+  auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  UserController.getMyProfile
 );
 
 router.post(
@@ -51,9 +56,9 @@ router.post(
 );
 
 router.patch(
-    '/:id/status',
-    auth(UserRole.ADMIN),
-    UserController.changeProfileStatus
+  "/:id/status",
+  auth(UserRole.ADMIN),
+  UserController.changeProfileStatus
 );
 
 export const userRoutes = router;
