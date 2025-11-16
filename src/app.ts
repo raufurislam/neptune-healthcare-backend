@@ -1,11 +1,13 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
+import cron from "node-cron";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import config from "./config";
 import router from "./app/routes";
 import cookieParser from "cookie-parser";
 import { PaymentController } from "./app/modules/payment/payment.controller";
+import { AppointmentService } from "./app/modules/appointment/appointment.service";
 
 const app: Application = express();
 
@@ -25,6 +27,15 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+cron.schedule("* * * * *", () => {
+  try {
+    console.log("Node cron called at ", new Date());
+    AppointmentService.cancelUnpaidAppointments();
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 app.use("/api/v1", router);
 
