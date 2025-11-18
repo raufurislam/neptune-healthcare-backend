@@ -131,7 +131,37 @@ const getPatientMetaData = async (user: IJWTPayload) => {
     }
 }
 
+const getAdminMetaData = async () => {
+    const patientCount = await prisma.patient.count();
+    const doctorCount = await prisma.doctor.count();
+    const adminCount = await prisma.admin.count();
+    const appointmentCount = await prisma.appointment.count()
+    const paymentCount = await prisma.payment.count()
 
+    const totalRevenue = await prisma.payment.aggregate({
+        _sum: {
+            amount: true
+        },
+        where: {
+            status: PaymentStatus.PAID
+        }
+    })
+
+    const barChartData = await getBarChartData();
+    const pieChartData = await getPieChartData();
+
+    return {
+        patientCount,
+        doctorCount,
+        adminCount,
+        appointmentCount,
+        paymentCount,
+        totalRevenue,
+        barChartData,
+        pieChartData
+    }
+
+}
 
 export const MetaService = {
   fetchDashboardMetaData,
