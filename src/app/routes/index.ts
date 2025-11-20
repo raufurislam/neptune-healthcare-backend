@@ -9,6 +9,7 @@ import { AppointmentRoutes } from "../modules/appointment/appointment.routes";
 import { PrescriptionRoutes } from "../modules/prescription/prescription.routes";
 import { ReviewRoutes } from "../modules/review/review.routes";
 import { PatientRoutes } from "../modules/patient/patient.routes";
+import { MetaRoutes } from "../modules/meta/meta.routes";
 
 const router = express.Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: "/patient",
     route: PatientRoutes,
+  },
+  {
+    path: "/metadata",
+    route: MetaRoutes,
   },
 ];
 
